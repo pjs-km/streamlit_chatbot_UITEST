@@ -3,6 +3,19 @@ import time
 import pandas as pd
 from PIL import Image
 
+# --- 세션 상태 초기화 (가장 위로 이동) ---
+# 'messages'는 현재 대화 기록을 저장합니다.
+if "messages" not in st.session_state:
+    st.session_state.messages = []
+
+# 'chat_history'는 저장된 대화 목록을 딕셔너리 형태로 저장합니다.
+if "chat_history" not in st.session_state:
+    st.session_state.chat_history = {}
+
+# 'current_chat_name'은 현재 대화의 이름을 저장합니다.
+if "current_chat_name" not in st.session_state:
+    st.session_state.current_chat_name = "새로운 대화"
+
 # 로고 이미지 파일 경로 설정 (your_logo.png를 프로젝트 폴더에 넣어주세요)
 logo_path = 'your_logo.png'
 
@@ -51,15 +64,8 @@ with st.sidebar:
     st.write("### `customers` 테이블")
     st.code("id: INT, name: VARCHAR, address: VARCHAR")
 
-# --- 세션 상태 초기화 ---
-if "messages" not in st.session_state:
-    st.session_state.messages = []
-if "chat_history" not in st.session_state:
-    st.session_state.chat_history = {}
-if "current_chat_name" not in st.session_state:
-    st.session_state.current_chat_name = "새로운 대화"
-
 # --- 메인 챗봇 UI ---
+st.title("NL to SQL 챗봇")
 st.subheader(f"현재 대화: {st.session_state.current_chat_name}")
 
 for message in st.session_state.messages:
