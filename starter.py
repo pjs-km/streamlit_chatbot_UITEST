@@ -35,3 +35,18 @@ st.sidebar.write("### `orders` 테이블")
 st.sidebar.code("id: INT, customer_id: INT, product_name: VARCHAR, price: DECIMAL")
 st.sidebar.write("### `customers` 테이블")
 st.sidebar.code("id: INT, name: VARCHAR, address: VARCHAR")
+
+import pandas as pd
+import streamlit as st
+
+# SQL 쿼리 출력
+st.subheader("생성된 SQL 쿼리")
+st.code("SELECT name, price FROM products WHERE category = 'electronics'", language='sql')
+
+# 쿼리 실행 결과 테이블 출력 (더미 데이터 사용)
+st.subheader("쿼리 실행 결과")
+df = pd.DataFrame({
+    'name': ['노트북', '스마트폰', '태블릿'],
+    'price': [1200, 800, 500]
+})
+st.dataframe(df)
