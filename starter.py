@@ -26,3 +26,12 @@ if prompt := st.chat_input("질문을 입력하세요"):
             response = f"귀하의 질문에 대한 SQL 쿼리입니다:\n\n```sql\nSELECT * FROM user_data WHERE name = '{prompt}'\n```"
             st.markdown(response)
     st.session_state.messages.append({"role": "assistant", "content": response})
+
+import streamlit as st
+
+# 사이드바에 스키마 정보 표시
+st.sidebar.header("데이터베이스 스키마")
+st.sidebar.write("### `orders` 테이블")
+st.sidebar.code("id: INT, customer_id: INT, product_name: VARCHAR, price: DECIMAL")
+st.sidebar.write("### `customers` 테이블")
+st.sidebar.code("id: INT, name: VARCHAR, address: VARCHAR")
