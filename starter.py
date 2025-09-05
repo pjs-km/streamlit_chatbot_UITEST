@@ -10,7 +10,7 @@ logo_path = 'your_logo.png'
 with st.sidebar:
     try:
         logo = Image.open(logo_path)
-        st.image(logo, use_column_width=True)
+        st.image(logo, use_container_width=True)
     except FileNotFoundError:
         st.error(f"'{logo_path}' 파일을 찾을 수 없습니다. 프로젝트 폴더에 로고를 넣어주세요.")
 
