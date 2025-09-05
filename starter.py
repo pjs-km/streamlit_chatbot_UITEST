@@ -1,25 +1,19 @@
 import streamlit as st
 import time
 import pandas as pd
+from PIL import Image
 
-# 제목 설정
-st.title("NL to SQL 챗봇")
-
-# --- 세션 상태 초기화 ---
-# 'messages'는 현재 대화 기록을 저장합니다.
-if "messages" not in st.session_state:
-    st.session_state.messages = []
-
-# 'chat_history'는 저장된 대화 목록을 딕셔너리 형태로 저장합니다.
-if "chat_history" not in st.session_state:
-    st.session_state.chat_history = {}
-
-# 'current_chat_name'은 현재 대화의 이름을 저장합니다.
-if "current_chat_name" not in st.session_state:
-    st.session_state.current_chat_name = "새로운 대화"
+# 로고 이미지 파일 경로 설정 (your_logo.png를 프로젝트 폴더에 넣어주세요)
+logo_path = 'your_logo.png'
 
 # --- 사이드바 UI ---
 with st.sidebar:
+    try:
+        logo = Image.open(logo_path)
+        st.image(logo, use_column_width=True)
+    except FileNotFoundError:
+        st.error(f"'{logo_path}' 파일을 찾을 수 없습니다. 프로젝트 폴더에 로고를 넣어주세요.")
+
     st.header("대화 목록")
 
     # 새 대화 시작 버튼
@@ -46,7 +40,6 @@ with st.sidebar:
     if st.session_state.chat_history:
         for chat_name in st.session_state.chat_history:
             if st.button(chat_name, key=chat_name):
-                # 버튼 클릭 시 해당 대화 기록 불러오기
                 st.session_state.messages = st.session_state.chat_history[chat_name]
                 st.session_state.current_chat_name = chat_name
                 st.experimental_rerun()
@@ -58,27 +51,29 @@ with st.sidebar:
     st.write("### `customers` 테이블")
     st.code("id: INT, name: VARCHAR, address: VARCHAR")
 
+# --- 세션 상태 초기화 ---
+if "messages" not in st.session_state:
+    st.session_state.messages = []
+if "chat_history" not in st.session_state:
+    st.session_state.chat_history = {}
+if "current_chat_name" not in st.session_state:
+    st.session_state.current_chat_name = "새로운 대화"
 
 # --- 메인 챗봇 UI ---
 st.subheader(f"현재 대화: {st.session_state.current_chat_name}")
 
-# 기존 대화 기록 표시
 for message in st.session_state.messages:
     with st.chat_message(message["role"]):
         st.markdown(message["content"])
 
-# 사용자 입력 처리
 if prompt := st.chat_input("질문을 입력하세요"):
-    # 사용자 메시지 표시
     st.chat_message("user").markdown(prompt)
     st.session_state.messages.append({"role": "user", "content": prompt})
 
-    # 챗봇 응답 시뮬레이션
     with st.chat_message("assistant"):
         with st.spinner("쿼리 생성 중..."):
-            time.sleep(1) # 백엔드 연결 대신 시간 지연 시뮬레이션
+            time.sleep(1)
             
-            # 쿼리 생성 및 실행 결과 시뮬레이션
             st.markdown("### 생성된 SQL 쿼리")
             st.code(f"SELECT * FROM user_data WHERE name = '{prompt}'", language='sql')
             
