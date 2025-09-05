@@ -4,20 +4,28 @@ import pandas as pd
 from PIL import Image
 
 # --- 세션 상태 초기화 (가장 위로 이동) ---
-# 'messages'는 현재 대화 기록을 저장합니다.
 if "messages" not in st.session_state:
     st.session_state.messages = []
 
-# 'chat_history'는 저장된 대화 목록을 딕셔너리 형태로 저장합니다.
 if "chat_history" not in st.session_state:
     st.session_state.chat_history = {}
 
-# 'current_chat_name'은 현재 대화의 이름을 저장합니다.
 if "current_chat_name" not in st.session_state:
     st.session_state.current_chat_name = "새로운 대화"
 
 # 로고 이미지 파일 경로 설정 (your_logo.png를 프로젝트 폴더에 넣어주세요)
 logo_path = 'your_logo.png'
+
+# 새로운 대화 시작 함수
+def start_new_chat():
+    st.session_state.messages = []
+    st.session_state.current_chat_name = "새로운 대화"
+    st.session_state.chat_name_input = ""
+
+# 대화 불러오기 함수
+def load_chat(chat_name):
+    st.session_state.messages = st.session_state.chat_history[chat_name]
+    st.session_state.current_chat_name = chat_name
 
 # --- 사이드바 UI ---
 with st.sidebar:
@@ -29,11 +37,9 @@ with st.sidebar:
 
     st.header("대화 목록")
 
-    # 새 대화 시작 버튼
+    # 새로운 대화 시작 버튼
     if st.button("새로운 대화 시작"):
-        st.session_state.messages = []
-        st.session_state.current_chat_name = "새로운 대화"
-        st.experimental_rerun()
+        start_new_chat()
 
     st.markdown("---")
 
@@ -53,9 +59,7 @@ with st.sidebar:
     if st.session_state.chat_history:
         for chat_name in st.session_state.chat_history:
             if st.button(chat_name, key=chat_name):
-                st.session_state.messages = st.session_state.chat_history[chat_name]
-                st.session_state.current_chat_name = chat_name
-                st.experimental_rerun()
+                load_chat(chat_name)
 
     st.markdown("---")
     st.header("데이터베이스 스키마")
